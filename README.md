@@ -1,13 +1,40 @@
-# Reverb Sold Links Tool
+# Reverb Sold Links Tool 
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-lj3rel
+This repo includes:
+- a **CLI tool** (`reverb_sold_links.py`)
+- a **Streamlit web app** (`app.py`)
+
+Both collect links to **sold** Reverb listings while excluding **Brand New** items.
+=======
 This repo includes a CLI tool that collects links to **sold** Reverb listings while excluding **Brand New** items.
+>>>>>> main
 
 ## Requirements
 
 - Python 3.9+
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-lj3rel
+- `streamlit` (for the web UI only)
+
+## Streamlit app (works on streamlit.app)
+
+Local run:
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+On Streamlit Community Cloud:
+- Main file path: `app.py`
+- Dependencies file: `requirements.txt`
+
+## CLI usage
+=======
 - No third-party packages required
 
 ## Usage
+>>>>>> main
 
 ```bash
 python reverb_sold_links.py --count 100 --min-price 10000

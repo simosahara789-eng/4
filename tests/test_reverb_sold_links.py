@@ -1,10 +1,14 @@
 import unittest
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
 from reverb_sold_links import (
     normalize_item_url,
     parse_listings_from_html,
     parse_listings_from_next_data,
 )
+=======
+from reverb_sold_links import normalize_item_url, parse_listings_from_html
+>>>>>> main
 
 
 class ParseListingsTests(unittest.TestCase):
@@ -38,6 +42,7 @@ class ParseListingsTests(unittest.TestCase):
             'https://reverb.com/item/1-something?foo=bar&show_sold=true',
         )
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
     def test_next_data_parse(self):
         html = '''
         <script id="__NEXT_DATA__" type="application/json">
@@ -50,6 +55,8 @@ class ParseListingsTests(unittest.TestCase):
         links = parse_listings_from_next_data(html)
         self.assertEqual(links, ["https://reverb.com/item/10-vintage-guitar?show_sold=true"])
 
+=======
+>>>>>> main
 
 if __name__ == '__main__':
     unittest.main()

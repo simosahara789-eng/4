@@ -4,14 +4,21 @@
 from __future__ import annotations
 
 import argparse
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
 import json
+=======
+>>>>>> main
 import re
 import sys
 import time
 from dataclasses import dataclass
 from html import unescape
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 from urllib.error import HTTPError, URLError
+=======
+from typing import Iterable, List, Optional, Set, Tuple
+>>>>>> main
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
 
@@ -21,10 +28,13 @@ CARD_RE = re.compile(
     r'<li[^>]*data-test=["\']listing-grid-card["\'][^>]*>(.*?)</li>',
     re.IGNORECASE | re.DOTALL,
 )
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
 NEXT_DATA_RE = re.compile(
     r'<script[^>]+id=["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>',
     re.IGNORECASE | re.DOTALL,
 )
+=======
+>>>>>> main
 
 
 @dataclass(frozen=True)
@@ -65,11 +75,16 @@ def is_brand_new_fragment(fragment: str, href: str) -> bool:
         return True
 
     href_lower = href.lower()
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
+=======
+    # URL slugs for Brand New listings often include this marker.
+>>>>>> main
     if "-brand-new" in href_lower or "-new-" in href_lower:
         return True
     return False
 
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
 def _condition_value(listing: Dict[str, Any]) -> str:
     condition = listing.get("condition")
     if isinstance(condition, str):
@@ -132,6 +147,8 @@ def parse_listings_from_next_data(html: str) -> List[str]:
     return links
 
 
+=======
+>>>>>> main
 def parse_listings_from_html(html: str) -> List[str]:
     links: List[str] = []
     seen: Set[str] = set()
@@ -149,12 +166,16 @@ def parse_listings_from_html(html: str) -> List[str]:
             if normalized not in seen:
                 seen.add(normalized)
                 links.append(normalized)
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
         if links:
             return links
 
     next_data_links = parse_listings_from_next_data(html)
     if next_data_links:
         return next_data_links
+=======
+        return links
+>>>>>> main
 
     for href in ITEM_LINK_RE.findall(html):
         if is_brand_new_fragment("", href):
@@ -173,24 +194,34 @@ def fetch_marketplace_page(url: str) -> str:
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
             "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
             "Accept-Language": "en-US,en;q=0.9",
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Referer": "https://reverb.com/",
+=======
+>>>>>> main
         },
     )
     with urlopen(req, timeout=30) as response:
         return response.read().decode("utf-8", errors="replace")
 
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
 def collect_links_with_warnings(config: FetchConfig) -> Tuple[List[str], List[str]]:
     results: List[str] = []
     seen: Set[str] = set()
     warnings: List[str] = []
+=======
+def collect_links(config: FetchConfig) -> List[str]:
+    results: List[str] = []
+    seen: Set[str] = set()
+>>>>>> main
     page = config.start_page
 
     while len(results) < config.count:
         url = build_marketplace_url(page, config.min_price, config.max_price, config.query)
         try:
             html = fetch_marketplace_page(url)
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
         except HTTPError as exc:  # pragma: no cover
             warnings.append(f"Failed page {page}: HTTP {exc.code}.")
             break
@@ -199,13 +230,20 @@ def collect_links_with_warnings(config: FetchConfig) -> Tuple[List[str], List[st
             break
         except Exception as exc:  # pragma: no cover
             warnings.append(f"Failed page {page}: {exc}")
+=======
+        except Exception as exc:  # pragma: no cover - network/environment dependent
+            print(f"[warn] Failed to fetch page {page}: {exc}", file=sys.stderr)
+>>>>>> main
             break
 
         page_links = parse_listings_from_html(html)
         if not page_links:
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
             warnings.append(
                 f"Page {page} returned no parseable listings. Reverb may be serving JS-only or blocking this host."
             )
+=======
+>>>>>> main
             break
 
         for link in page_links:
@@ -220,6 +258,7 @@ def collect_links_with_warnings(config: FetchConfig) -> Tuple[List[str], List[st
         if config.delay > 0:
             time.sleep(config.delay)
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
     if len(results) < config.count:
         warnings.append(f"Collected {len(results)} links, fewer than requested ({config.count}).")
     return results, warnings
@@ -230,6 +269,9 @@ def collect_links(config: FetchConfig) -> List[str]:
     for warning in warnings:
         print(f"[warn] {warning}", file=sys.stderr)
     return links
+=======
+    return results
+>>>>>> main
 
 
 def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
@@ -269,12 +311,28 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
 
     out = "\n".join(links)
     if args.output:
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
         with open(args.output, "w", encoding="utf-8") as file:
             if out:
                 file.write(out + "\n")
         print(f"Saved {len(links)} links to {args.output}", file=sys.stderr)
     elif out:
         print(out)
+=======
+        with open(args.output, "w", encoding="utf-8") as f:
+            if out:
+                f.write(out + "\n")
+        print(f"Saved {len(links)} links to {args.output}", file=sys.stderr)
+    else:
+        if out:
+            print(out)
+
+    if len(links) < args.count:
+        print(
+            f"[warn] Collected {len(links)} links, fewer than requested ({args.count}).",
+            file=sys.stderr,
+        )
+>>>>>> main
 
     return 0
 

@@ -67,3 +67,18 @@ https://reverb.com/item/91347270-mint-taylor-50th-anniversary-924ce-k-ltd-36-mon
 - `--count` must be one of: `100`, `500`, `1000`.
 - Parser strategy: listing cards → `__NEXT_DATA__` JSON → raw item-link fallback.
 - If Reverb rate-limits or blocks requests from the host IP, the tool may return fewer results.
+
+## If GitHub shows merge-conflict markers
+
+If conflict markers appear in files (for example in `README.md`, `app.py`, `reverb_sold_links.py`, or tests), resolve them locally and commit the resolution:
+
+```bash
+python scripts/resolve_conflict_markers.py --strategy ours README.md app.py reverb_sold_links.py tests/test_reverb_sold_links.py
+```
+
+Strategies:
+- `ours`: keep your branch section
+- `theirs`: keep incoming branch section
+- `both`: keep both blocks (good for docs, risky for Python code)
+
+After running, execute tests and push the resolution commit.

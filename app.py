@@ -3,8 +3,12 @@ from typing import List
 
 import streamlit as st
 
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
+from reverb_sold_links import FetchConfig, collect_links_with_warnings
+=======
 from reverb_sold_links import FetchConfig, collect_links
 
+>>>>>> main
 
 st.set_page_config(page_title="Reverb Sold Links Collector", page_icon="🎸", layout="wide")
 st.title("🎸 Reverb Sold Links Collector")
@@ -36,12 +40,25 @@ if run:
         )
 
         with st.spinner("Collecting links from Reverb..."):
+<<<<<< codex/create-tool-to-retrieve-sold-reverb-products-jcu4h5
+            links, warnings = collect_links_with_warnings(config)
+
+        if not links:
+            st.warning("No links were returned.")
+            st.subheader("Why this happens")
+            for warning in warnings:
+                st.code(warning)
+            st.info(
+                "Reverb may block requests from some cloud IP ranges (including Streamlit hosts), "
+                "or serve pages that do not include parseable listings."
+=======
             links: List[str] = collect_links(config)
 
         if not links:
             st.warning(
                 "No links were returned. Reverb may have blocked the request from this environment, "
                 "or no listings matched your filters."
+>>>>>> main
             )
         else:
             st.success(f"Collected {len(links)} sold links.")
